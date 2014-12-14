@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>BoS multiplayer event stream</title>
+    <meta name="generator" content="Bootply"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+
+    <!--[if lt IE 9]>
+    <script src="js/html5.js"></script>
+    <![endif]-->
+
+
+
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/tree.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="text-center">
+    <div class="container">
+        <div class="row">
+            <div class="col col-lg-12 col-sm-12">
+                <h2>BoS multiplayer event stream</h2>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CONTENT
+=================================-->
+<div class="container">
+    <div class="row">
+        <div class="col-md-3" id="leftCol">
+
+            <div class="well">
+                <ul class="nav nav-stacked" id="sidebar">
+                    <!-- Mission list goes here -->
+
+                </ul>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3>Mission statistics</h3></div>
+                        <div class="panel-body" id="gameevents">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+
+    </div>
+</div>
+<hr>
+<!-- /CONTENT ============-->
+</div>
+
+
+<script src="js/jquery-1.11.0.min.js"></script>
+<script src="js/jquery-migrate-1.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"/>
+<script src="js/initws.js"></script>
+</body>
+</html>
+
+
+
+<script>
+    $( document ).ready(function() {
+        var socket = new WebSocket("ws://localhost/gameevents");
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function (frame) {
+            var subscription = stompClient.subscribe("/topic/gameevents", function (message) {
+                console.log(message.body);
+                var json = JSON.parse(message.body);
+                $('#gameevents').append("<div>"+ json.TEST +"</div>");
+            });
+        });
+    });
+</script>
