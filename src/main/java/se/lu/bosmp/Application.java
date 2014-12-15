@@ -1,9 +1,11 @@
 package se.lu.bosmp;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -11,6 +13,7 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -41,6 +44,24 @@ public class Application {
         em.setJpaProperties(additionalProperties());
 
         return em;
+    }
+
+    @Value("${threadPool.db.init_size}")
+    private int THREAD_POOL_DB_INIT_SIZE;
+    @Value("${threadPool.db.max_size}")
+    private int THREAD_POOL_DB_MAX_SIZE;
+    @Value("${threadPool.db.queue_size}")
+    private int THREAD_POOL_DB_QUEUE_SIZE;
+
+
+    @Bean(name="dbThreadPoolExecutor")
+    public TaskExecutor getTaskExecutor() {
+        ThreadPoolTaskExecutor tpte = new ThreadPoolTaskExecutor();
+        tpte.setCorePoolSize(THREAD_POOL_DB_INIT_SIZE);
+        tpte.setMaxPoolSize(THREAD_POOL_DB_MAX_SIZE);
+        tpte.setQueueCapacity(THREAD_POOL_DB_QUEUE_SIZE);
+        tpte.initialize();
+        return tpte;
     }
 
 //    @Bean

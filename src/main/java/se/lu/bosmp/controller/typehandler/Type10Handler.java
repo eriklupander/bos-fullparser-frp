@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import se.lu.bosmp.controller.ParserContext;
 import se.lu.bosmp.dao.GameObjectDefinitionDao;
 import se.lu.bosmp.dao.MissionDao;
 import se.lu.bosmp.dao.PlayerDao;
@@ -16,9 +15,9 @@ import se.lu.bosmp.processor.data.AType10RowData;
  * AType10  (Player joined mission)
  */
 @Component(value = "Type10Handler")
-public class Type10Handler implements HandleRowData<AType10RowData> {
+public class Type10Handler implements RowDataHandler<AType10RowData> {
 
-    static final Logger log = LoggerFactory.getLogger(HandleRowData.class);
+    static final Logger log = LoggerFactory.getLogger(RowDataHandler.class);
 
     @Autowired
     MissionDao missionDao;
@@ -33,7 +32,7 @@ public class Type10Handler implements HandleRowData<AType10RowData> {
     @Transactional
     public void handle(AType10RowData rd) {
 
-        MissionInstance missionInstance = missionDao.getMissionInstance(ParserContext.missionInstanceId);
+        MissionInstance missionInstance = missionDao.getMissionInstanceByIdHash(rd.getFileNameHash());
 
 //        GameObjectDefinition gameObjectDefinition = new GameObjectDefinition();
 //        gameObjectDefinition.setType(rd.getType().trim());

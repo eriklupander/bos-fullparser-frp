@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import rx.Observable;
-import se.lu.bosmp.controller.ParserContext;
 import se.lu.bosmp.dao.AmmunitionDao;
 import se.lu.bosmp.dao.GameObjectDefinitionDao;
 import se.lu.bosmp.dao.MissionDao;
@@ -19,15 +18,13 @@ import se.lu.bosmp.model.MissionGameObject;
 import se.lu.bosmp.model.MissionInstance;
 import se.lu.bosmp.processor.data.AType2RowData;
 
-import javax.annotation.PostConstruct;
-
 /**
  * Handles hit events
  */
 @Component(value = "Type2Handler")
-public class Type2Handler implements HandleRowData<AType2RowData>{
+public class Type2Handler implements RowDataHandler<AType2RowData> {
 
-    static final Logger log = LoggerFactory.getLogger(HandleRowData.class);
+    static final Logger log = LoggerFactory.getLogger(RowDataHandler.class);
 
     @Autowired
     MissionDao missionDao;
@@ -50,15 +47,15 @@ public class Type2Handler implements HandleRowData<AType2RowData>{
         if(rd.getAttackerGameObjectId() == -1) {
             return;
         }
-        MissionInstance missionInstance = missionDao.getMissionInstance(ParserContext.missionInstanceId);
+        MissionInstance missionInstance = missionDao.getMissionInstanceByIdHash(rd.getFileNameHash());
 
-        MissionGameObject attacker = missionDao.getMissionGameObjectByGameObjectId(rd.getAttackerGameObjectId(), ParserContext.missionInstanceId);
-        MissionGameObject target = missionDao.getMissionGameObjectByGameObjectId(rd.getTargetGameObjectId(), ParserContext.missionInstanceId);
+        MissionGameObject attacker = missionDao.getMissionGameObjectByGameObjectId(rd.getAttackerGameObjectId(), missionInstance.getId());
+        MissionGameObject target = missionDao.getMissionGameObjectByGameObjectId(rd.getTargetGameObjectId(), missionInstance.getId());
 
 
         // Try to find a hit in same mission, same att/tgt and same timestamp
         try {
-            Hit hit = missionDao.findHit(ParserContext.missionInstanceId, attacker.getId(), target.getId(), rd.getTime());
+            Hit hit = missionDao.findHit(missionInstance.getId(), attacker.getId(), target.getId(), rd.getTime());
             if(hit != null) {
                 hit.setDamage(rd.getDamage());
                 missionDao.createOrUpdateHit(hit);

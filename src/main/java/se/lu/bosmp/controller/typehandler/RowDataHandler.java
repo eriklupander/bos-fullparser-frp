@@ -2,10 +2,7 @@ package se.lu.bosmp.controller.typehandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.lu.bosmp.event.GameEvent;
 import se.lu.bosmp.processor.RowData;
-
-import javax.persistence.EntityManager;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,9 +11,9 @@ import javax.persistence.EntityManager;
  * Time: 22:36
  * To change this template use File | Settings | File Templates.
  */
-public interface HandleRowData<T extends RowData> {
+public interface RowDataHandler<T extends RowData> {
 
-    static final Logger log = LoggerFactory.getLogger(HandleRowData.class);
+    static final Logger log = LoggerFactory.getLogger(RowDataHandler.class);
 
     void handle(T rd);
 

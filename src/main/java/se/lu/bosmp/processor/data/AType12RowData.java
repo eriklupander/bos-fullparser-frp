@@ -17,8 +17,9 @@ public class AType12RowData extends BaseRowData {
     private String name;
     private Integer parentId;
 
-    public AType12RowData(String row, long index) {
-        super(row, index);
+    public AType12RowData(String row, Integer fileNameHash, long index) {
+        super(row, fileNameHash, index);
+
         this.gameObjectId = RowElementParser.parseNumber(row, "ID:");
         this.type = RowElementParser.parseSpacedWord(row, "TYPE:");
         this.country = RowElementParser.parseCountry(row);

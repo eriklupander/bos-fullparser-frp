@@ -15,12 +15,15 @@ public class BaseRowData implements RowData {
     private Integer time;
     private Integer typeCode;
     private Long index;
+    private Integer fileNameHash;
 
-    protected BaseRowData(String row, Long index) {
+    protected BaseRowData(String row, Integer fileNameHash, Long index) {
+
 
         this.time = RowElementParser.parseTime(row);
         this.typeCode = RowElementParser.parseTypeCode(row);
         this.index = index;
+        this.fileNameHash = fileNameHash;
     }
 
     public Integer getTime() {
@@ -34,6 +37,16 @@ public class BaseRowData implements RowData {
 
     public Long getIndex() {
         return index;
+    }
+
+    @Override
+    public Long getTenantId() {
+        throw new RuntimeException("Not implemented yet...");
+    }
+
+    @Override
+    public Integer getFileNameHash() {
+        return fileNameHash;
     }
 
     @Override

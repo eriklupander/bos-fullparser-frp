@@ -6,19 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import rx.Observable;
-import rx.Observer;
-import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.internal.operators.OperatorToMultimap;
+import rx.observables.GroupedObservable;
 import se.lu.bosmp.controller.MissionParseManager;
 import se.lu.bosmp.processor.*;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created with IntelliJ IDEA.
@@ -62,28 +59,35 @@ public class ReportFileScannerBean implements ReportFileScanner {
         }
 
         final SingleFileProcessor sfp = new SingleFileProcessor();
-        final StringToRows stringToRows = new StringToRows();
+        final FileDataToRowMapper fileDataToRowMapper = new FileDataToRowMapper();
         final LogProcessor lp = new LogProcessor();
 
         // RxJava approach
         final long start = System.currentTimeMillis();
         Observable<List<RowData>> rowDataObservable = Observable.from(files)
                 .toSortedList((File f1, File f2)
-                                -> new Long(f1.lastModified()).compareTo(f2.lastModified()))
+                        -> new Long(f1.lastModified()).compareTo(f2.lastModified()))
 
-                .flatMap(list   -> Observable.from(list))           // From List<List<File>> to List<File>
-                .map(f          -> sfp.process(f))                  // Turns each File into a plain string
-                .map(s          -> stringToRows.process(s))         // Turns each String into a List of rows
-                .map(list       -> lp.process(list))                // Turns each List of row string into a List of row data
-                .filter(l       -> l.size() > 0)                    // Discard all empty lists
-                .flatMap(list   -> Observable.from(list))           // Map the List<List<RowData>> into a new stream of List<RowData>
-                .toSortedList((RowData r1, RowData r2)              // Sort by index so we can process.
+                .flatMap(list -> Observable.from(list))                // From List<List<File>> to List<File>
+                .map(file -> sfp.process(file))                    // Turns each File into a plain string
+                .map(fileData -> fileDataToRowMapper.process(fileData))// Turns each String into a List of rows
+                .map(fileRowData -> lp.process(fileRowData))              // Turns each List of row string into a List of row data
+                .filter(rowDataList -> rowDataList.size() > 0)               // Discard all empty lists
+                .flatMap(rowDataList   -> Observable.from(rowDataList))         // Map the List<List<RowData>> into a new stream of List<RowData>
+                .toSortedList((RowData r1, RowData r2)                          // Sort by index so we can process.
                                 -> r1.getIndex().compareTo(r2.getIndex()));
 
+
+       // groupedObservableObservable.subscribe(missionParseManager);
         // Important note: Due to the requirement that we process all events in the current "batch" in order,
         // we first flatmap the list of lists and then sort them by their index. A much more effective solution
         // would be to skip the flatmap and sort, then the missionParseManager would not have to wait for all items to be
         // made ready, it could asynchronously persist batch by batch.
+
+        // Also an option - use the groupBy observable function to extract all events of a given type into a new stream.
+        // By doing this synchronously we can make sure that types are processed in their relevant order, e.g:
+        // Mission (0) -> Units (12) -> Hits (1,2) -> Kills (3). Also - after 0 and 12 are done, the rest can be processed
+        // in any order.
 
         rowDataObservable.subscribe(missionParseManager);
 

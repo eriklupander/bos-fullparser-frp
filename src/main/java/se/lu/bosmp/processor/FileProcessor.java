@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Turns a List of date ordered files into a List of log entry strings.
  */
-public class FileProcessor implements Processor<String, File> {
+public class FileProcessor {
 
     public List<String> process(List<File> files) {
         StringBuffer buf = new StringBuffer();

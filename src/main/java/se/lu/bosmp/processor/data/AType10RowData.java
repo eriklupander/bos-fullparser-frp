@@ -17,8 +17,8 @@ public class AType10RowData extends BaseRowData {
     private String type;
     private Integer country;
 
-    public AType10RowData(String row, long index) {
-        super(row, index);
+    public AType10RowData(String row, Integer fileNameHash, long index) {
+        super(row, fileNameHash, index);
 
         this.planeGameObjectId = RowElementParser.parseNumber(row, "PLID:");
         this.pilotGameObjectId = RowElementParser.parseNumber(row, "PID:");

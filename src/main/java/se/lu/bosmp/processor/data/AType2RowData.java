@@ -11,8 +11,8 @@ public class AType2RowData extends BaseRowData {
     private Integer targetGameObjectId;
     private Float damage;
 
-    public AType2RowData(String row, long index) {
-        super(row, index);
+    public AType2RowData(String row, Integer fileNameHash, long index) {
+        super(row, fileNameHash, index);
         this.attackerGameObjectId = RowElementParser.parseNumber(row, "AID:");
         this.targetGameObjectId = RowElementParser.parseNumber(row, "TID:");
         this.damage = RowElementParser.parseFloat(row, "DMG:");

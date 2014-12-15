@@ -11,4 +11,7 @@ public interface RowData {
     Integer getTime();
     Integer getTypeCode();
     Long getIndex();
+
+    Long getTenantId();
+    Integer getFileNameHash();
 }

@@ -1,5 +1,7 @@
 package se.lu.bosmp.processor;
 
+import se.lu.bosmp.scanner.FileData;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -14,7 +16,10 @@ import java.io.IOException;
  */
 public class SingleFileProcessor {
 
-    public String process(File f) {
+    public FileData process(File f) {
+        FileData fileData = new FileData();
+        fileData.setFileName(f.getName());
+        fileData.setFileNameHash(normalize(f.getName()));
         StringBuilder buf = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
@@ -31,9 +36,18 @@ public class SingleFileProcessor {
             } finally {
                 br.close();
             }
-            return buf.toString();
+            fileData.setData(buf.toString());
+            return fileData;
         } catch (IOException e) {
             throw new IllegalArgumentException("Unparsable file: " + f.getName());
         }
+    }
+
+    private Integer normalize(String fileName) {
+        fileName = fileName
+                .replaceAll("-", "")
+                .replaceAll("_", "");
+        fileName = fileName.substring(0, fileName.lastIndexOf("[")-1);
+        return fileName.hashCode();
     }
 }

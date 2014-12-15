@@ -11,8 +11,8 @@ public class AType1RowData extends BaseRowData {
     private Integer targetGameObjectId;
     private String ammunition;
 
-    public AType1RowData(String row, long index) {
-        super(row, index);
+    public AType1RowData(String row, Integer fileNameHash, long index) {
+        super(row, fileNameHash, index);
         this.attackerGameObjectId = RowElementParser.parseNumber(row, "AID:");
         this.targetGameObjectId = RowElementParser.parseNumber(row, "TID:");
         this.ammunition = RowElementParser.parseString(row, "AMMO:");

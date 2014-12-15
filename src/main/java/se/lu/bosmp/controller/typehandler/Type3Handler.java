@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import se.lu.bosmp.controller.ParserContext;
 import se.lu.bosmp.dao.AmmunitionDao;
 import se.lu.bosmp.dao.GameObjectDefinitionDao;
 import se.lu.bosmp.dao.MissionDao;
@@ -18,9 +17,9 @@ import se.lu.bosmp.processor.data.AType3RowData;
  * Handles kill events
  */
 @Component(value = "Type3Handler")
-public class Type3Handler implements HandleRowData<AType3RowData>{
+public class Type3Handler implements RowDataHandler<AType3RowData> {
 
-    static final Logger log = LoggerFactory.getLogger(HandleRowData.class);
+    static final Logger log = LoggerFactory.getLogger(RowDataHandler.class);
 
     @Autowired
     MissionDao missionDao;
@@ -37,7 +36,7 @@ public class Type3Handler implements HandleRowData<AType3RowData>{
     @Transactional
     @Override
     public void handle(AType3RowData rd) {
-        MissionInstance missionInstance = missionDao.getMissionInstance(ParserContext.missionInstanceId);
+        MissionInstance missionInstance = missionDao.getMissionInstanceByIdHash(rd.getFileNameHash());
 
         Kill kill = new Kill();
         if(rd.getAttackerGameObjectId() != null && rd.getAttackerGameObjectId() != -1) {

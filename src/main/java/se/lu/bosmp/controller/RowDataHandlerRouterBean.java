@@ -5,13 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import se.lu.bosmp.controller.typehandler.HandleRowData;
-import se.lu.bosmp.controller.typehandler.Type0Handler;
+import se.lu.bosmp.controller.typehandler.RowDataHandler;
 import se.lu.bosmp.processor.RowData;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.function.Consumer;
 
 /**
@@ -28,28 +24,27 @@ public class RowDataHandlerRouterBean implements Consumer<RowData> {
 
     @Autowired
     @Qualifier(value = "Type0Handler")
-    HandleRowData rowDataHandler0;
+    RowDataHandler rowDataHandler0;
 
     @Autowired
     @Qualifier(value = "Type1Handler")
-    HandleRowData rowDataHandler1;
+    RowDataHandler rowDataHandler1;
 
     @Autowired
     @Qualifier(value = "Type2Handler")
-    HandleRowData rowDataHandler2;
+    RowDataHandler rowDataHandler2;
 
     @Autowired
     @Qualifier(value = "Type3Handler")
-    HandleRowData rowDataHandler3;
-
+    RowDataHandler rowDataHandler3;
 
     @Autowired
     @Qualifier(value = "Type10Handler")
-    HandleRowData rowDataHandler10;
+    RowDataHandler rowDataHandler10;
 
     @Autowired
     @Qualifier(value = "Type12Handler")
-    HandleRowData rowDataHandler12;
+    RowDataHandler rowDataHandler12;
 
     @Override
     public void accept(RowData rd) {

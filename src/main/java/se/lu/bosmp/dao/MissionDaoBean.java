@@ -3,6 +3,7 @@ package se.lu.bosmp.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import se.lu.bosmp.model.*;
 
 import javax.persistence.EntityManager;
@@ -30,7 +31,7 @@ public class MissionDaoBean implements MissionDao {
     public Mission getOrCreate(Mission mission) {
         try {
             Mission dbMission = em.createQuery("SELECT mt FROM Mission mt WHERE mt.nameHash =:nameHash", Mission.class)
-                    .setParameter("nameHash", mission.getName().hashCode()).getSingleResult();
+                    .setParameter("nameHash", mission.getNameHash()).getSingleResult();
             return dbMission;
         } catch (NoResultException e) {
             return em.merge(mission);
@@ -39,20 +40,42 @@ public class MissionDaoBean implements MissionDao {
 
     @Override
     public MissionInstance getOrCreate(MissionInstance missionInstance) {
-        if(missionInstance.getId() == null) {
+        try {
+            MissionInstance dbMissionInstance = em.createQuery("SELECT mi FROM MissionInstance mi WHERE mi.missionIdHash =:missionIdHash", MissionInstance.class)
+                    .setParameter("missionIdHash", missionInstance.getMissionIdHash()).getSingleResult();
+            return dbMissionInstance;
+        } catch (NoResultException e) {
             return em.merge(missionInstance);
-        } else {
-            return em.find(MissionInstance.class, missionInstance.getId());
+        }
+    }
+
+    // TODO - probably its best to create a dummy instance to update later if possible.
+    @Override
+    public MissionInstance getMissionInstanceByIdHash(Integer fileNameHash) {
+        try {
+            MissionInstance dbMissionInstance = em.createQuery("SELECT mi FROM MissionInstance mi WHERE mi.missionIdHash =:missionIdHash", MissionInstance.class)
+                    .setParameter("missionIdHash", fileNameHash).getSingleResult();
+            return dbMissionInstance;
+        } catch (NoResultException e) {
+            throw new IllegalArgumentException("Could not find a mission instance identified by " + fileNameHash);
         }
     }
 
     @Override
+    @Transactional
     public MissionInstance getMissionInstance(Long missionInstanceId) {
-        return em.find(MissionInstance.class, missionInstanceId);
+
+        MissionInstance mi = em.find(MissionInstance.class, missionInstanceId);
+
+        // Lazy-loading the old-school way..
+        mi.getMissionGameObjects().size();
+        mi.getMissionParticipation().size();
+        mi.getMissionGameObjectKills().size();
+        return mi;
     }
 
     @Override
-    public MissionGameObject getOrCreateMissionGameObject(MissionGameObject mgo) {
+    public MissionGameObject getOrCreate(MissionGameObject mgo) {
         try {
             MissionGameObject dbMgo = em.createQuery("SELECT mgo FROM MissionGameObject mgo WHERE mgo.missionInstance.id = :missionInstanceId AND mgo.gameObjectId = :gameObjectId", MissionGameObject.class)
                     .setParameter("missionInstanceId", mgo.getMissionInstance().getId())
@@ -119,5 +142,7 @@ public class MissionDaoBean implements MissionDao {
     public Kill createKill(Kill kill) {
         return em.merge(kill);
     }
+
+
 
 }

@@ -15,9 +15,9 @@ public interface MissionDao {
 
     MissionInstance getOrCreate(MissionInstance mission);
 
-    MissionInstance getMissionInstance(Long missionInstanceId);
+  //  MissionInstance getMissionInstance(Long missionInstanceId);
 
-    MissionGameObject getOrCreateMissionGameObject(MissionGameObject mgo);
+    MissionGameObject getOrCreate(MissionGameObject mgo);
 
     MissionGameObject getMissionGameObjectByGameObjectId(Integer planeGameObjectId, Long missionInstanceId);
 
@@ -30,4 +30,9 @@ public interface MissionDao {
     Hit findHit(Long missionInstanceId, Long attackerId, Long targetId, Integer time);
 
     Kill createKill(Kill kill);
+
+    MissionInstance getMissionInstanceByIdHash(Integer fileNameHash);
+
+
+    MissionInstance getMissionInstance(Long id);
 }

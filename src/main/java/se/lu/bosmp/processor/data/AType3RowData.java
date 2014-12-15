@@ -10,8 +10,8 @@ public class AType3RowData extends BaseRowData {
     private Integer attackerGameObjectId;
     private Integer targetGameObjectId;
 
-    public AType3RowData(String row, long index) {
-        super(row, index);
+    public AType3RowData(String row, Integer fileNameHash, long index) {
+        super(row, fileNameHash, index);
         this.attackerGameObjectId = RowElementParser.parseNumber(row, "AID:");
         this.targetGameObjectId = RowElementParser.parseNumber(row, "TID:");
     }

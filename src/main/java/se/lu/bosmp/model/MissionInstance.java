@@ -16,6 +16,8 @@ import java.util.Set;
 @Entity
 public class MissionInstance extends BaseEntity {
 
+    private Integer missionIdHash;
+
     private Calendar started;
     private Calendar ended;
 
@@ -25,6 +27,14 @@ public class MissionInstance extends BaseEntity {
     private Set<MissionGameObject> missionGameObjects = new HashSet<>();
 
     private Set<Kill> missionGameObjectKills = new HashSet<>();
+
+    public Integer getMissionIdHash() {
+        return missionIdHash;
+    }
+
+    public void setMissionIdHash(Integer missionIdHash) {
+        this.missionIdHash = missionIdHash;
+    }
 
     @Temporal(TemporalType.TIMESTAMP)
     public Calendar getStarted() {
@@ -53,7 +63,7 @@ public class MissionInstance extends BaseEntity {
         this.mission = mission;
     }
 
-    @OneToMany
+    @OneToMany(mappedBy = "missionInstance")
     public Set<MissionParticipation> getMissionParticipation() {
         return missionParticipation;
     }
@@ -62,8 +72,7 @@ public class MissionInstance extends BaseEntity {
         this.missionParticipation = missionParticipation;
     }
 
-    @OneToMany
-    @JoinTable
+    @OneToMany(mappedBy = "missionInstance")
     public Set<MissionGameObject> getMissionGameObjects() {
         return missionGameObjects;
     }
@@ -72,8 +81,7 @@ public class MissionInstance extends BaseEntity {
         this.missionGameObjects = missionGameObjects;
     }
 
-    @OneToMany
-    @JoinTable
+    @OneToMany(mappedBy = "missionInstance")
     public Set<Kill> getMissionGameObjectKills() {
         return missionGameObjectKills;
     }

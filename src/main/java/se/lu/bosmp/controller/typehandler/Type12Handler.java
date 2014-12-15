@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import se.lu.bosmp.controller.CountryResolver;
-import se.lu.bosmp.controller.ParserContext;
 import se.lu.bosmp.dao.CountryDao;
 import se.lu.bosmp.dao.GameObjectDefinitionDao;
 import se.lu.bosmp.dao.MissionDao;
@@ -20,9 +19,9 @@ import se.lu.bosmp.processor.data.AType12RowData;
  * AType12  (some game object spawned)
  */
 @Component(value = "Type12Handler")
-public class Type12Handler implements HandleRowData<AType12RowData> {
+public class Type12Handler implements RowDataHandler<AType12RowData> {
 
-    static final Logger log = LoggerFactory.getLogger(HandleRowData.class);
+    static final Logger log = LoggerFactory.getLogger(RowDataHandler.class);
 
     @Autowired
     MissionDao missionDao;
@@ -40,7 +39,7 @@ public class Type12Handler implements HandleRowData<AType12RowData> {
     @Transactional
     public void handle(AType12RowData rd) {
 
-        MissionInstance missionInstance = missionDao.getMissionInstance(ParserContext.missionInstanceId);
+        MissionInstance missionInstance = missionDao.getMissionInstanceByIdHash(rd.getFileNameHash());
 
         GameObjectDefinition gameObjectDefinition = new GameObjectDefinition();
         gameObjectDefinition.setType(rd.getType().trim());
@@ -58,7 +57,7 @@ public class Type12Handler implements HandleRowData<AType12RowData> {
         mgo.setMissionInstance(missionInstance);
         mgo.setCountry(country);
 
-        mgo = missionDao.getOrCreateMissionGameObject(mgo);
+        mgo = missionDao.getOrCreate(mgo);
 
     }
 }

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import se.lu.bosmp.controller.ParserContext;
 import se.lu.bosmp.dao.AmmunitionDao;
 import se.lu.bosmp.dao.GameObjectDefinitionDao;
 import se.lu.bosmp.dao.MissionDao;
@@ -20,9 +19,9 @@ import se.lu.bosmp.processor.data.AType1RowData;
  * Handles hit events
  */
 @Component(value = "Type1Handler")
-public class Type1Handler implements HandleRowData<AType1RowData>{
+public class Type1Handler implements RowDataHandler<AType1RowData> {
 
-    static final Logger log = LoggerFactory.getLogger(HandleRowData.class);
+    static final Logger log = LoggerFactory.getLogger(RowDataHandler.class);
 
     @Autowired
     MissionDao missionDao;
@@ -40,10 +39,10 @@ public class Type1Handler implements HandleRowData<AType1RowData>{
     @Override
     public void handle(AType1RowData rd) {
 
-        MissionInstance missionInstance = missionDao.getMissionInstance(ParserContext.missionInstanceId);
+        MissionInstance missionInstance = missionDao.getMissionInstanceByIdHash(rd.getFileNameHash());
 
-        MissionGameObject attacker = missionDao.getMissionGameObjectByGameObjectId(rd.getAttackerGameObjectId(), ParserContext.missionInstanceId);
-        MissionGameObject target = missionDao.getMissionGameObjectByGameObjectId(rd.getTargetGameObjectId(), ParserContext.missionInstanceId);
+        MissionGameObject attacker = missionDao.getMissionGameObjectByGameObjectId(rd.getAttackerGameObjectId(), missionInstance.getId());
+        MissionGameObject target = missionDao.getMissionGameObjectByGameObjectId(rd.getTargetGameObjectId(), missionInstance.getId());
         Ammunition  ammunition = new Ammunition();
         ammunition.setName(rd.getAmmunition());
         ammunition = ammunitionDao.getOrCreate(ammunition);

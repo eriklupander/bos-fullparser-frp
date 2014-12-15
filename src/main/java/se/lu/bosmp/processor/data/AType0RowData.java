@@ -16,8 +16,8 @@ public class AType0RowData extends BaseRowData {
 
     private List<String> countries = new ArrayList<>();
 
-    public AType0RowData(String row, long index) {
-        super(row, index);
+    public AType0RowData(String row, Integer fileNameHash, long index) {
+        super(row, fileNameHash, index);
         this.gameDate = RowElementParser.parseGameDate(row);
         this.gameTime = RowElementParser.parseGameTime(row);
         this.missionFile = RowElementParser.parseMissionFile(row);

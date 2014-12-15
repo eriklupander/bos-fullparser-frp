@@ -1,5 +1,7 @@
 package se.lu.bosmp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -63,6 +65,7 @@ public class Hit extends BaseEntity {
         this.target = target;
     }
 
+    @JsonIgnore
     @ManyToOne
     public MissionInstance getMissionInstance() {
         return missionInstance;

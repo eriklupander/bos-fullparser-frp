@@ -1,5 +1,7 @@
 package se.lu.bosmp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -17,6 +19,7 @@ public class MissionGameObject extends BaseEntity {
 
     private Integer spawnedGameTime;
     private Integer destroyedGameTime;
+
 
     private MissionInstance missionInstance;
     private GameObjectDefinition gameObjectDefinition;
@@ -48,6 +51,7 @@ public class MissionGameObject extends BaseEntity {
     }
 
     @ManyToOne
+    @JsonIgnore
     public MissionInstance getMissionInstance() {
         return missionInstance;
     }
