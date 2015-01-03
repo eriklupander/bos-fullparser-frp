@@ -10,6 +10,7 @@ import se.lu.bosmp.dao.GameObjectDefinitionDao;
 import se.lu.bosmp.dao.MissionDao;
 import se.lu.bosmp.dao.PlayerDao;
 import se.lu.bosmp.model.Kill;
+import se.lu.bosmp.model.MissionGameObject;
 import se.lu.bosmp.model.MissionInstance;
 import se.lu.bosmp.processor.data.AType3RowData;
 
@@ -42,12 +43,16 @@ public class Type3Handler implements RowDataHandler<AType3RowData> {
         if(rd.getAttackerGameObjectId() != null && rd.getAttackerGameObjectId() != -1) {
             kill.setAttacker(missionDao.getMissionGameObjectByGameObjectId(rd.getAttackerGameObjectId(), missionInstance.getId()));
         }
-
-        kill.setTarget(missionDao.getMissionGameObjectByGameObjectId(rd.getTargetGameObjectId(), missionInstance.getId()));
-        kill.setHitGameTime(rd.getTime());
+        MissionGameObject target = missionDao.getMissionGameObjectByGameObjectId(rd.getTargetGameObjectId(), missionInstance.getId());
+        kill.setTarget(target);
+        kill.setKilledGameTime(rd.getTime());
         kill.setMissionInstance(missionInstance);
 
+
         kill = missionDao.createKill(kill);
+
+        target.setDestroyedGameTime(rd.getTime());
+        missionDao.updateMissionGameObject(target);
 
     }
 }

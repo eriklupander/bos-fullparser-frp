@@ -18,6 +18,8 @@
 
     <link href="css/styles.css" rel="stylesheet">
     <link href="css/tree.css" rel="stylesheet">
+    <link href="css/jquery.treetable.css" rel="stylesheet">
+    <link href="css/jquery.treetable.theme.default.css" rel="stylesheet">
 </head>
 
 <body>
@@ -52,6 +54,13 @@
                     <div class="panel panel-default">
                         <div class="panel-heading"><h3>Mission statistics</h3></div>
                         <div class="panel-body" id="gameevents">
+                            <table id="killtable">
+                                <th>Target</th>
+                                <th>Target ID</th>
+                                <th>Attacker</th>
+                                <th>Pilot</th>
+                                <th>Country</th>
+                            </table>
 
                         </div>
                     </div>
@@ -70,8 +79,11 @@
 <script src="js/jquery-1.11.0.min.js"></script>
 <script src="js/jquery-migrate-1.2.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.treetable.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"/>
 <script src="js/initws.js"></script>
+<script src="js/gui.js"></script>
+
 </body>
 </html>
 
@@ -89,5 +101,7 @@
                 $('#gameevents').append("<div>"+ json.TEST +"</div>");
             });
         });
+
+        gui.loadKills(1); // Hard-coded to mission 1 for now.
     });
 </script>

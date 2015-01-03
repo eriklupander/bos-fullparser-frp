@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +29,11 @@ public class MissionGameObject extends BaseEntity {
     private GameObjectDefinition gameObjectDefinition;
     private Player player;
     private Country country;
+
+    private MissionObjectGroup missionObjectGroup;
+
+    private MissionGameObject parentMissionGameObject;
+    private Set<MissionGameObject> children = new HashSet<>();
 
     public Integer getGameObjectId() {
         return gameObjectId;
@@ -48,6 +57,16 @@ public class MissionGameObject extends BaseEntity {
 
     public void setDestroyedGameTime(Integer destroyedGameTime) {
         this.destroyedGameTime = destroyedGameTime;
+    }
+
+    @ManyToOne(optional = true)
+    @JsonIgnore
+    public MissionObjectGroup getMissionObjectGroup() {
+        return missionObjectGroup;
+    }
+
+    public void setMissionObjectGroup(MissionObjectGroup missionObjectGroup) {
+        this.missionObjectGroup = missionObjectGroup;
     }
 
     @ManyToOne
@@ -85,6 +104,33 @@ public class MissionGameObject extends BaseEntity {
 
     public void setCountry(Country country) {
         this.country = country;
+    }
+
+    @ManyToOne(optional = true)
+    @JsonIgnore
+    public MissionGameObject getParentMissionGameObject() {
+        return parentMissionGameObject;
+    }
+
+    public void setParentMissionGameObject(MissionGameObject parentMissionGameObject) {
+        this.parentMissionGameObject = parentMissionGameObject;
+    }
+
+    @Transient
+    public Long getParentId() {
+        if(this.parentMissionGameObject != null) {
+            return this.parentMissionGameObject.getId();
+        }
+        return null;
+    }
+
+    @OneToMany(mappedBy = "parentMissionGameObject")
+    public Set<MissionGameObject> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Set<MissionGameObject> children) {
+        this.children = children;
     }
 
     @Override

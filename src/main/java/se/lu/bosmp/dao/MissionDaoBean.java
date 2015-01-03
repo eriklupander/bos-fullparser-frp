@@ -68,10 +68,22 @@ public class MissionDaoBean implements MissionDao {
         MissionInstance mi = em.find(MissionInstance.class, missionInstanceId);
 
         // Lazy-loading the old-school way..
-        mi.getMissionGameObjects().size();
+        for(MissionGameObject mgo : mi.getMissionGameObjects() ) {
+            loadChildren(mgo);
+        }
         mi.getMissionParticipation().size();
         mi.getMissionGameObjectKills().size();
+        mi.getMissionObjectGroups().size();
+
         return mi;
+    }
+
+    private void loadChildren(MissionGameObject mgo) {
+        if(mgo.getChildren().size() > 0) {
+            for(MissionGameObject child : mgo.getChildren()) {
+                loadChildren(child);
+            }
+        }
     }
 
     @Override

@@ -17,17 +17,17 @@ import javax.persistence.Table;
 @Table(name="missioninstance_kill")
 public class Kill extends BaseEntity {
 
-    private Integer hitGameTime;
+    private Integer killedGameTime;
     private MissionGameObject attacker;
     private MissionGameObject target;
     private MissionInstance missionInstance;
 
-    public Integer getHitGameTime() {
-        return hitGameTime;
+    public Integer getKilledGameTime() {
+        return killedGameTime;
     }
 
-    public void setHitGameTime(Integer hitGameTime) {
-        this.hitGameTime = hitGameTime;
+    public void setKilledGameTime(Integer killedGameTime) {
+        this.killedGameTime = killedGameTime;
     }
 
     @ManyToOne

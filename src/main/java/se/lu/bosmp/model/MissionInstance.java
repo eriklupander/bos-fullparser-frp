@@ -25,8 +25,8 @@ public class MissionInstance extends BaseEntity {
 
     private Set<MissionParticipation> missionParticipation = new HashSet<>();
     private Set<MissionGameObject> missionGameObjects = new HashSet<>();
-
     private Set<Kill> missionGameObjectKills = new HashSet<>();
+    private Set<MissionObjectGroup> missionObjectGroups = new HashSet<>();
 
     public Integer getMissionIdHash() {
         return missionIdHash;
@@ -88,5 +88,14 @@ public class MissionInstance extends BaseEntity {
 
     public void setMissionGameObjectKills(Set<Kill> missionGameObjectKills) {
         this.missionGameObjectKills = missionGameObjectKills;
+    }
+
+    @OneToMany(mappedBy = "missionInstance")
+    public Set<MissionObjectGroup> getMissionObjectGroups() {
+        return missionObjectGroups;
+    }
+
+    public void setMissionObjectGroups(Set<MissionObjectGroup> missionObjectGroups) {
+        this.missionObjectGroups = missionObjectGroups;
     }
 }

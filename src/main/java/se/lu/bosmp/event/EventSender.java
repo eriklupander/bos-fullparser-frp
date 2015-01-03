@@ -36,7 +36,7 @@ public class EventSender implements Observer<GameEvent> {
 
     @Override
     public void onError(Throwable throwable) {
-        log.info("ENTER - onError: " + throwable.getMessage());
+        log.info("ENTER - onError: " + throwable.getClass().getSimpleName() + " " + throwable.getMessage());
     }
 
     @Override

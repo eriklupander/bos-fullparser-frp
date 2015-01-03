@@ -76,7 +76,8 @@ public class ReportFileScannerBean implements ReportFileScanner {
                 .flatMap(rowDataList   -> Observable.from(rowDataList))         // Map the List<List<RowData>> into a new stream of List<RowData>
                 .toSortedList((RowData r1, RowData r2)                          // Sort by index so we can process.
                                 -> r1.getIndex().compareTo(r2.getIndex()));
-
+                 // TODO - we should probably scan for AType:3 (kills) with no attackerId, resolve most damaging attacker on that
+                // object and award the kill accordingly.
 
        // groupedObservableObservable.subscribe(missionParseManager);
         // Important note: Due to the requirement that we process all events in the current "batch" in order,

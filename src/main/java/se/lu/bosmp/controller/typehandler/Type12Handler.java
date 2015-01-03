@@ -59,5 +59,22 @@ public class Type12Handler implements RowDataHandler<AType12RowData> {
 
         mgo = missionDao.getOrCreate(mgo);
 
+        if(rd.getParentId() != null && rd.getParentId() != -1) {
+            MissionGameObject parent = missionDao.getMissionGameObjectByGameObjectId(rd.getParentId(), missionInstance.getId());
+            if(parent != null) {
+                mgo.setParentMissionGameObject(parent);
+                parent.getChildren().add(mgo);
+
+                missionDao.updateMissionGameObject(mgo);
+                missionDao.updateMissionGameObject(parent);
+            } else {
+                // Perhaps not found yet? This needs to be handled.
+                log.warn("COULD NOT FIND PARENT OBJECT FOR " + rd.getParentId());
+            }
+
+        }
+
+
+
     }
 }

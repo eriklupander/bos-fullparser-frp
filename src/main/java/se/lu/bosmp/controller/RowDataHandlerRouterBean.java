@@ -48,8 +48,7 @@ public class RowDataHandlerRouterBean implements Consumer<RowData> {
 
     @Override
     public void accept(RowData rd) {
-        log.info("Handling index: " + rd.getIndex());
-        switch(rd.getTypeCode()) {
+         switch(rd.getTypeCode()) {
             case 12:
                 rowDataHandler12.handle(rd);
                 break;
