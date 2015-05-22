@@ -38,8 +38,8 @@ public class Type2Handler implements RowDataHandler<AType2RowData> {
     @Autowired
     private AmmunitionDao ammunitionDao;
 
-    @Autowired
-    EventSender eventSender;
+   // @Autowired
+   // EventSender eventSender;
 
     @Transactional
     @Override
@@ -62,8 +62,8 @@ public class Type2Handler implements RowDataHandler<AType2RowData> {
             }
 
             // Try to RxJava stuff to send the event
-            Observable<GameEvent> observable = Observable.just(hit).map( h -> EventFactory.buildHitEvent(h)).doOnNext(ge -> log.info("I was triggered!"));
-            observable.subscribe(eventSender);
+           // Observable<GameEvent> observable = Observable.just(hit).map( h -> EventFactory.buildHitEvent(h)).doOnNext(ge -> log.info("I was triggered!"));
+           // observable.subscribe(eventSender);
         } catch (NullPointerException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

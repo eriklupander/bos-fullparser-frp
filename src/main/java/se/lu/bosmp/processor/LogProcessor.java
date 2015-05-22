@@ -2,6 +2,7 @@ package se.lu.bosmp.processor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import se.lu.bosmp.processor.data.*;
 import se.lu.bosmp.scanner.FileRowData;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * Time: 21:41
  * To change this template use File | Settings | File Templates.
  */
+@Component(value="logProcessor")
 public class LogProcessor  {
 
     private static final Logger log = LoggerFactory.getLogger(LogProcessor.class);

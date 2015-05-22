@@ -17,8 +17,9 @@ public class FileDataToRowMapper {
 
     public FileRowData process(FileData fileData) {
         FileRowData fileRowData = new FileRowData();
-        fileRowData.setRows(Arrays.asList(fileData.getData().split("\r\n")));
+        fileRowData.setRows(Arrays.asList(fileData.getData().split(System.lineSeparator())));
         fileRowData.setFileNameHash(fileData.getFileNameHash());
+        fileRowData.setFileName(fileData.getFileName());
         return fileRowData;
     }
 }

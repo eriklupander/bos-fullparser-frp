@@ -45,6 +45,7 @@ public class MissionDaoBean implements MissionDao {
                     .setParameter("missionIdHash", missionInstance.getMissionIdHash()).getSingleResult();
             return dbMissionInstance;
         } catch (NoResultException e) {
+            log.info("Creating mission instance " + missionInstance.getMissionIdHash());
             return em.merge(missionInstance);
         }
     }
@@ -66,6 +67,9 @@ public class MissionDaoBean implements MissionDao {
     public MissionInstance getMissionInstance(Long missionInstanceId) {
 
         MissionInstance mi = em.find(MissionInstance.class, missionInstanceId);
+        if(mi == null) {
+            throw new IllegalStateException("Query for MissionInstance " + missionInstanceId + " returned 0 results. This is not acceptable.");
+        }
 
         // Lazy-loading the old-school way..
         for(MissionGameObject mgo : mi.getMissionGameObjects() ) {

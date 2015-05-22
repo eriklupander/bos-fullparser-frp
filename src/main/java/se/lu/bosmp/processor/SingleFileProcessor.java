@@ -44,6 +44,9 @@ public class SingleFileProcessor {
     }
 
     private Integer normalize(String fileName) {
+        if (! (fileName.contains("-") && fileName.contains("_"))) {
+            return fileName.hashCode();
+        }
         fileName = fileName
                 .replaceAll("-", "")
                 .replaceAll("_", "");

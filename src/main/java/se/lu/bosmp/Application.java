@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.io.File;
 import java.util.Properties;
 
 //@EnableCaching
@@ -77,8 +78,8 @@ public class Application {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setUrl("jdbc:h2:file:./db/bosmp;AUTO_SERVER=TRUE;MVCC=TRUE");
-        dataSource.setUsername( "bosmp" );
-        dataSource.setPassword( "bosmp" );
+        dataSource.setUsername("bosmp");
+        dataSource.setPassword("bosmp");
 
         return dataSource;
     }
@@ -103,6 +104,15 @@ public class Application {
         return properties;
     }
 
+
+    @Bean
+    public org.apache.camel.processor.idempotent.FileIdempotentRepository fileStore() {
+        org.apache.camel.processor.idempotent.FileIdempotentRepository fileStore = new org.apache.camel.processor.idempotent.FileIdempotentRepository();
+        fileStore.setCacheSize(10000);
+        fileStore.setFileStore(new File(".filestore.dat"));
+        fileStore.setMaxFileStoreSize(10000000L);
+        return fileStore;
+    }
 
 //    @Configuration
 //    @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)

@@ -38,7 +38,7 @@ public class FileProcessor {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
-        return Arrays.asList(buf.toString().split("\r\n"));
+        return Arrays.asList(buf.toString().split(System.lineSeparator()));
     }
 
 }

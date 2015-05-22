@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class FileRowData {
     private Integer fileNameHash;
+    private String fileName;
     private List<String> rows = new ArrayList<>();
 
     public Integer getFileNameHash() {
@@ -28,5 +29,13 @@ public class FileRowData {
 
     public void setRows(List<String> rows) {
         this.rows = rows;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

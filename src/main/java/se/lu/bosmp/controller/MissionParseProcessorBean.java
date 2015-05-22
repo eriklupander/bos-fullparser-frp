@@ -44,7 +44,8 @@ public class MissionParseProcessorBean implements MissionParseManager {
 
     @Override
     public void onNext(List<RowData> rowData) {
-
+        log.info("ENTER onNext with " + rowData.size() + " data rows.");
+        rowData.stream().forEach(rd -> log.info("ORDER: " + rd.getTypeCode() + " :: " + rd.getIndex()));
         // Try to find kills with no attacker and associate to a missiongameobject
         mapUnmappedKills(rowData);
 
